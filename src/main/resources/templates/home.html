@@ -1,0 +1,42 @@
+<html>
+<body>
+<pre>
+$!{value1}
+    $!{value1}
+    $!{value1}
+
+    colors: $!{colors}
+
+    #foreach($color in $colors)
+        this is color $!{foreach.index} : $color
+    #end
+    #foreach($key in $map.keySet())
+        Number : $key, Value:$map.get($key)
+    #end
+    #foreach($kv in $map.entrySet())
+        Number : $kv.key, Value:$kv.value
+    #end
+
+    User: $!{user.name}, $!{user.getDesc()}
+
+    #set($title = "web title")
+    Title : $!{title}
+
+    #parse("header.html")
+    Include : #include("header.html")
+
+    #macro (render_color, $index, $color)
+        macro $index, $color
+    #end
+
+   #foreach($color in $colors)
+       #render_color($foreach.index, $color)
+    #end
+
+   #set($hello="hello")
+    #set($hello1="$!{hello}world")
+    $!hello
+    $!hello1
+</pre>
+</body>
+</html>
