@@ -19,7 +19,7 @@ import java.util.*;
 /**
  * Created by Administrator on 16.10.12.
  */
-@Controller
+//@Controller
 public class indexController {
     private static final Logger logger = LoggerFactory.getLogger(LogAspect.class);
 
@@ -50,10 +50,8 @@ public class indexController {
             map.put(String.valueOf(i), String.valueOf(i * i));
         }
         model.addAttribute("map", map);
-        model.addAttribute("user", new User("HI"));
+        //model.addAttribute("user", new User("HI"));
         return "home";
-
-
     }
 
     @RequestMapping(path = "/request", method = RequestMethod.GET)
@@ -86,13 +84,12 @@ public class indexController {
 
     @RequestMapping(path = "/redirect/{code}", method = RequestMethod.GET)
     public RedirectView redirect(@PathVariable("code") int code, HttpSession session) {
-        session.setAttribute("msg", " jump from redirect ");
+        session.setAttribute("msg", "session");
         RedirectView red = new RedirectView("/", true);
         if (code == 301) {
             red.setStatusCode(HttpStatus.MOVED_PERMANENTLY);
         }
         return red;
-
     }
 
     @RequestMapping(path = "/admin", method = RequestMethod.GET)
@@ -107,7 +104,7 @@ public class indexController {
     @ExceptionHandler
     @ResponseBody
     public String error(Exception e) {
-        return "error" + e.getMessage();
+        return "error:　" + e.getMessage();
     }
 
 }
