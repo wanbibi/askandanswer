@@ -48,7 +48,6 @@ public class HomeController {
 
     @RequestMapping(path = "/user/{userid}")
     public String userIndex(Model model, @PathVariable("userid") int userid) {
-
         model.addAttribute("vos", getQuestions(userid, 0, 10));
         return "index";
     }
