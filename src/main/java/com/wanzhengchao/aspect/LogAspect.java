@@ -18,6 +18,7 @@ import java.util.Date;
 @Aspect
 @Component
 public class LogAspect {
+
     private static final Logger logger = LoggerFactory.getLogger(LogAspect.class);
 
     @Before("execution(* com.wanzhengchao.controller.indexController.*(..))")
@@ -30,9 +31,10 @@ public class LogAspect {
     }
 
     @After("execution(* com.wanzhengchao.controller.indexController.*(..))")
-    public void afterMethod() {
+        public void afterMethod() {
         logger.info("after" + new Date());
     }
+
 
 
 }
