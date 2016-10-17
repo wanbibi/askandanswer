@@ -1,6 +1,6 @@
-package com.wanzhengchao.Configuration;
+package com.wanzhengchao.configuration;
 
-import com.wanzhengchao.inteceptor.LoginRequiredInteceptor;
+import com.wanzhengchao.inteceptor.LoginRequiredInterceptor;
 import com.wanzhengchao.inteceptor.PassportInteceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -16,12 +16,12 @@ public class WendaConfiguration extends WebMvcConfigurerAdapter{
     PassportInteceptor passportInteceptor;
 
     @Autowired
-    LoginRequiredInteceptor loginRequiredInteceptor;
+    LoginRequiredInterceptor loginRequiredInterceptor;
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(passportInteceptor);
-        registry.addInterceptor(loginRequiredInteceptor).addPathPatterns("/user/*");
+        registry.addInterceptor(loginRequiredInterceptor).addPathPatterns("/user/*");
         super.addInterceptors(registry);
     }
 }

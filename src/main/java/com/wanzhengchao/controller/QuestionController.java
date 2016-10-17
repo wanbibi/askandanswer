@@ -1,8 +1,8 @@
 package com.wanzhengchao.controller;
 
 import com.wanzhengchao.aspect.LogAspect;
-import com.wanzhengchao.model.HostHolder;
-import com.wanzhengchao.model.Question;
+import com.wanzhengchao.model.*;
+import com.wanzhengchao.service.CommentService;
 import com.wanzhengchao.service.QuestionService;
 import com.wanzhengchao.service.UserService;
 import com.wanzhengchao.util.WendaUtil;
@@ -13,8 +13,11 @@ import org.springframework.mail.MailException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.View;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by Administrator on 16.10.16.
@@ -32,6 +35,9 @@ public class QuestionController {
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    CommentService commentService;
 
     @RequestMapping(value = "/question/add", method = RequestMethod.POST)
     @ResponseBody
@@ -52,7 +58,7 @@ public class QuestionController {
         } catch (Exception e) {
             logger.error("add failed" + e.getMessage());
         }
-        return WendaUtil.getJSONString(1, "faild");
+        return WendaUtil.getJSONString(1, "failed");
 
     }
 
@@ -61,7 +67,15 @@ public class QuestionController {
     public String questionDetail(Model model, @PathVariable("qid") int qid) {
         Question question = questionService.getById(qid);
         model.addAttribute("question", question);
-        model.addAttribute("user", userService.getUser(question.getUserId()));
+        List<Comment> commentList = commentService.selectByEntity(qid, EntityType.ENTITY_QUESTION);
+        ArrayList<ViewObject> comments = new ArrayList<>();
+        for (Comment comment : commentList) {
+            ViewObject vo = new ViewObject();
+            vo.set("comment", comment);
+            vo.set("user", userService.getUser(comment.getUserId()));
+            comments.add(vo);
+        }
+        model.addAttribute("comments", comments);
         return "detail";
 
     }

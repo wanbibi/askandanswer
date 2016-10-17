@@ -36,4 +36,8 @@ public class QuestionService {
         question.setContent(sensitiveService.filter(question.getContent()));
         return questionDAO.addQuestion(question);
     }
+
+    public void updateCommentCount(int entityId, int count){
+         questionDAO.updateCommentCount(entityId,count);
+    }
 }

@@ -23,6 +23,8 @@ public interface QuestionDAO {
     @Select({"select ",SELECT_FIELDS," from ",TABLE_NAME," where id=#{id} "})
     Question selectById(int id);
 
+    @Update({" update ",TABLE_NAME ,"set comment_count=#{count} where id=#{entityId}"})
+    void updateCommentCount(int entityId, int count);
     List<Question> selectLatestQuestions(@Param("userId") int userId,
                                          @Param("offset") int offset,
                                          @Param("limit") int limit);

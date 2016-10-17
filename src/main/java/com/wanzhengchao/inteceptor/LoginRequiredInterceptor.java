@@ -13,14 +13,15 @@ import javax.servlet.http.HttpServletResponse;
  * Created by Administrator on 16.10.15.
  */
 @Component
-public class LoginRequiredInteceptor implements HandlerInterceptor {
+public class LoginRequiredInterceptor implements HandlerInterceptor {
 
     @Autowired
     HostHolder hostHolder;
+
     @Override
     public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o) throws Exception {
-        if(hostHolder.getUser()==null){
-            httpServletResponse.sendRedirect("/reglogin?next="+ httpServletRequest.getRequestURI());
+        if (hostHolder.getUser() == null) {
+            httpServletResponse.sendRedirect("/reglogin?next=" + httpServletRequest.getRequestURI());
             return false;
         }
         return true;
