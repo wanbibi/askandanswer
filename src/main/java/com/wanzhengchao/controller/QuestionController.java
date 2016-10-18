@@ -3,6 +3,7 @@ package com.wanzhengchao.controller;
 import com.wanzhengchao.aspect.LogAspect;
 import com.wanzhengchao.model.*;
 import com.wanzhengchao.service.CommentService;
+import com.wanzhengchao.service.LikeService;
 import com.wanzhengchao.service.QuestionService;
 import com.wanzhengchao.service.UserService;
 import com.wanzhengchao.util.WendaUtil;
@@ -39,6 +40,9 @@ public class QuestionController {
     @Autowired
     CommentService commentService;
 
+    @Autowired
+    LikeService likeService;
+
     @RequestMapping(value = "/question/add", method = RequestMethod.POST)
     @ResponseBody
     public String addQuestion(@RequestParam("title") String title, @RequestParam("content") String content) {
@@ -68,11 +72,17 @@ public class QuestionController {
         Question question = questionService.getById(qid);
         model.addAttribute("question", question);
         List<Comment> commentList = commentService.selectByEntity(qid, EntityType.ENTITY_QUESTION);
-        ArrayList<ViewObject> comments = new ArrayList<>();
+        ArrayList<ViewObject> comments = new ArrayList<ViewObject>();
         for (Comment comment : commentList) {
             ViewObject vo = new ViewObject();
             vo.set("comment", comment);
             vo.set("user", userService.getUser(comment.getUserId()));
+            if (hostHolder.getUser() == null) {
+                vo.set("liked", 0);
+            } else {
+                vo.set("liked", likeService.getLikeStatus(hostHolder.getUser().getId(), EntityType.ENTITY_COMMENT, comment.getId()));
+            }
+            vo.set("likeCount", likeService.getLikeCount(EntityType.ENTITY_COMMENT, comment.getId()));
             comments.add(vo);
         }
         model.addAttribute("comments", comments);

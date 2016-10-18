@@ -16,7 +16,7 @@ import java.util.List;
 @Mapper
 @Component
 public interface MessageDAO {
-    String TABLE_NAME = " message ";
+    String TABLE_NAME = "    message ";
     String INSERT_FIELDS = " from_id, to_id, content, has_read, conversation_id, created_date ";
     String SELECT_FIELDS = " id, " + INSERT_FIELDS;
 

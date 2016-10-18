@@ -5,6 +5,7 @@ import com.wanzhengchao.dao.UserDAO;
 import com.wanzhengchao.model.Question;
 import com.wanzhengchao.model.ViewObject;
 import com.wanzhengchao.service.QuestionService;
+import com.wanzhengchao.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,15 +27,16 @@ public class HomeController {
     @Autowired
     QuestionService questionService;
     @Autowired
-    UserDAO userDAO;
+    UserService userService;
 
     private List<ViewObject> getQuestions(int userId, int offset, int limit) {
+
         List<Question> latestQuestions = questionService.getLatestQuestions(userId, offset, limit);
         ArrayList<ViewObject> list = new ArrayList<>();
         for (Question question : latestQuestions) {
             ViewObject viewObject = new ViewObject();
             viewObject.set("question", question);
-            viewObject.set("user", userDAO.selectById(question.getUserId()));
+            viewObject.set("user", userService.getUser(question.getUserId()));
             list.add(viewObject);
         }
         return list;

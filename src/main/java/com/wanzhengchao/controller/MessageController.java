@@ -54,7 +54,7 @@ public class MessageController {
             vo.set("conversation", message);
             int targetId = message.getFromId() == userId ? message.getToId() : message.getFromId();
             vo.set("user", userService.getUser(targetId));
-            vo.set("unread", messageService.getConversationUnreadCount(userId,message.getConversationId()));
+            vo.set("unread", messageService.getConversationUnreadCount(userId, message.getConversationId()));
             conversations.add(vo);
         }
         model.addAttribute("conversations", conversations);
