@@ -1,6 +1,9 @@
 package com.wanzhengchao.controller;
 
 import com.sun.deploy.security.WinDeployNTLMAuthCallback;
+import com.wanzhengchao.aspect.async.EventModel;
+import com.wanzhengchao.aspect.async.EventProducer;
+import com.wanzhengchao.aspect.async.EventType;
 import com.wanzhengchao.model.Comment;
 import com.wanzhengchao.model.EntityType;
 import com.wanzhengchao.model.HostHolder;
@@ -26,6 +29,10 @@ public class LikeController {
     CommentService commentService;
 
     @Autowired
+    EventProducer eventProducer;
+
+
+    @Autowired
     LikeService likeService;
 
     @RequestMapping(path = {"/like"}, method = {RequestMethod.POST})
@@ -34,6 +41,12 @@ public class LikeController {
         if (hostHolder.getUser() == null) {
             return WendaUtil.getJSONString(999);
         }
+        Comment comment = commentService.getCommentById(commentId);
+        eventProducer.fireEvent(new EventModel(EventType.LIKE)
+                .setActorId(hostHolder.getUser().getId()).setEntityId(commentId)
+                .setEntityType(EntityType.ENTITY_COMMENT).setEntityOwnerId(comment.getUserId())
+                .setExt("questionId", String.valueOf(comment.getEntityId())));
+
         long likeCount = likeService.like(hostHolder.getUser().getId(), EntityType.ENTITY_COMMENT, commentId);
         return WendaUtil.getJSONString(0, String.valueOf(likeCount));
     }

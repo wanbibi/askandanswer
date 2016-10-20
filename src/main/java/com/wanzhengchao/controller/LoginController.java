@@ -1,6 +1,9 @@
 package com.wanzhengchao.controller;
 
 import com.wanzhengchao.aspect.LogAspect;
+import com.wanzhengchao.aspect.async.EventModel;
+import com.wanzhengchao.aspect.async.EventProducer;
+import com.wanzhengchao.aspect.async.EventType;
 import com.wanzhengchao.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +29,10 @@ public class LoginController {
     @Autowired
     UserService userService;
 
-    @RequestMapping(path = {"/reg/" }, method = RequestMethod.POST)
+    @Autowired
+    EventProducer eventProducer;
+
+    @RequestMapping(path = {"/reg/"}, method = RequestMethod.POST)
     public String regist(Model model, @RequestParam("username") String username,
                          @RequestParam("password") String password,
                          @RequestParam("next") String next,
@@ -42,6 +48,10 @@ public class LoginController {
                     cookie.setMaxAge(3600 * 24 * 5);
                 }
                 response.addCookie(cookie);
+
+                eventProducer.fireEvent(new EventModel(EventType.LOGIN)
+                        .setExt("username", username).setExt("email", "zjuyxy@qq.com")
+                        .setActorId((int) map.get("userId")));
                 if (!StringUtils.isEmpty(next)) {
                     return "redirect:" + next;
                 }
@@ -58,7 +68,7 @@ public class LoginController {
 
     }
 
-    @RequestMapping(path = {"/login/" }, method = RequestMethod.POST)
+    @RequestMapping(path = {"/login/"}, method = RequestMethod.POST)
     public String login(Model model, @RequestParam("username") String username,
                         @RequestParam("password") String password,
                         @RequestParam(value = "next", required = false) String next,
@@ -91,15 +101,14 @@ public class LoginController {
     }
 
 
-
-    @RequestMapping(path = {"/reglogin" }, method = {RequestMethod.GET})
+    @RequestMapping(path = {"/reglogin"}, method = {RequestMethod.GET})
     public String regloginPage(Model model, @RequestParam(value = "next", required = false) String next) {
         model.addAttribute("next", next);
         return "login";
     }
 
 
-    @RequestMapping(path = {"/logout" }, method = {RequestMethod.GET})
+    @RequestMapping(path = {"/logout"}, method = {RequestMethod.GET})
     public String logout(@CookieValue("ticket") String ticket) {
         userService.logout(ticket);
         return "redirect:/";

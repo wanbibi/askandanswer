@@ -29,7 +29,7 @@ public class LikeService {
     }
 
     public long like(int userId, int entityType, int entityId) {
-        String likeKey = RedisKeyUtil.getLikeKey(entityType, entityId);
+        String likeKey = RedisKeyUtil.getLikeKey(entityType, entityId);//like 02 05
         jedisAdapter.sadd(likeKey, String.valueOf(userId));
         String disLikeKey = RedisKeyUtil.getDisLikeKey(entityType, entityId);
         jedisAdapter.srem(disLikeKey, String.valueOf(userId));
