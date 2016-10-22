@@ -9,7 +9,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 
 /**
  * Created by Administrator on 16.10.15.
- */
+        */
 @Component
 public class WendaConfiguration extends WebMvcConfigurerAdapter{
     @Autowired

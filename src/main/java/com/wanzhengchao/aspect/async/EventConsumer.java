@@ -27,26 +27,26 @@ public class EventConsumer implements InitializingBean, ApplicationContextAware 
     private ApplicationContext applicationContext;
     private Map<EventType, List<EventHandler>> config = new HashMap<EventType, List<EventHandler>>();
 
-    @Autowired
-    JedisAdapter jedisAdapter;
+            @Autowired
+            JedisAdapter jedisAdapter;
 
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        Map<String, EventHandler> beans = applicationContext.getBeansOfType(EventHandler.class);
-        if (beans != null) {
-            for (Map.Entry<String, EventHandler> entry : beans.entrySet()) {
-                List<EventType> eventTypes = entry.getValue().getSupportEventTypes();
-                for (EventType type : eventTypes) {
-                    if (!config.containsKey(type)) {
-                        config.put(type, new ArrayList<EventHandler>());
-                    }
-                    config.get(type).add(entry.getValue());
-                }
-            }
-        }
-
-        Thread thread = new Thread(new Runnable() {
             @Override
+            public void afterPropertiesSet() throws Exception {
+                Map<String, EventHandler> beans = applicationContext.getBeansOfType(EventHandler.class);
+                if (beans != null) {
+                    for (Map.Entry<String, EventHandler> entry : beans.entrySet()) {
+                        List<EventType> eventTypes = entry.getValue().getSupportEventTypes();
+                        for (EventType type : eventTypes) {
+                            if (!config.containsKey(type)) {
+                                config.put(type, new ArrayList<EventHandler>());
+                            }
+                            config.get(type).add(entry.getValue());
+                        }
+                    }
+                }
+
+                Thread thread = new Thread(new Runnable() {
+                    @Override
             public void run() {
                 while (true) {
                     String key = RedisKeyUtil.getEventQueueKey();
