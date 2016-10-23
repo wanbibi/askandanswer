@@ -50,9 +50,9 @@ public class FollowService {
         tx.zrem(followerKey, String.valueOf(userId));
         // 当前用户对这类实体关注-1
         tx.zrem(followeeKey, String.valueOf(entityId));
-        List<Object> ret = jedisAdapter.exec(tx, jedis);
+    List<Object> ret = jedisAdapter.exec(tx, jedis);
         return ret.size() == 2 && (Long) ret.get(0) > 0 && (Long) ret.get(1) > 0;
-    }
+}
 
     public List<Integer> getFollowers(int entityType, int entityId, int count) {
         String followerKey = RedisKeyUtil.getFollowerKey(entityType, entityId);

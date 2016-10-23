@@ -20,7 +20,7 @@ import java.util.*;
  * Created by Administrator on 16.10.12.
  */
 //@Controller
-public class indexController {
+public class IndexController {
     private static final Logger logger = LoggerFactory.getLogger(LogAspect.class);
 
     @RequestMapping(path = {"/", "/index"}, method = RequestMethod.GET)
