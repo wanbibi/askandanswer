@@ -119,29 +119,29 @@ public class FollowController {
         if (hostHolder.getUser() != null) {
             model.addAttribute("followees", getUsersInfo(hostHolder.getUser().getId(), followeeIds));
         } else {
-            model.addAttribute("followees", getUsersInfo(0, followeeIds));
-        }
-        model.addAttribute("followeeCount", followService.getFolloweeCount(userId, EntityType.ENTITY_USER));
-        model.addAttribute("curUser", userService.getUser(userId));
-        return "followees";
-    }
-
-    private List<ViewObject> getUsersInfo(int localUserId, List<Integer> userIds) {
-        List<ViewObject> userInfos = new ArrayList<ViewObject>();
-        for (Integer uid : userIds) {
-            User user = userService.getUser(uid);
-            if (user == null) {
-                continue;
+                        model.addAttribute("followees", getUsersInfo(0, followeeIds));
             }
-            ViewObject vo = new ViewObject();
-            vo.set("user", user);
-            vo.set("commentCount", commentService.getUserCommentCount(uid));
-            vo.set("followerCount", followService.getFollowerCount(EntityType.ENTITY_USER, uid));
-            vo.set("followeeCount", followService.getFolloweeCount(uid, EntityType.ENTITY_USER));
-            if (localUserId != 0) {
-                vo.set("followed", followService.isFollower(localUserId, EntityType.ENTITY_USER, uid));
-            } else {
-                vo.set("followed", false);
+            model.addAttribute("followeeCount", followService.getFolloweeCount(userId, EntityType.ENTITY_USER));
+            model.addAttribute("curUser", userService.getUser(userId));
+            return "followees";
+        }
+
+        private List<ViewObject> getUsersInfo(int localUserId, List<Integer> userIds) {
+            List<ViewObject> userInfos = new ArrayList<ViewObject>();
+            for (Integer uid : userIds) {
+                User user = userService.getUser(uid);
+                if (user == null) {
+                    continue;
+                }
+                ViewObject vo = new ViewObject();
+                vo.set("user", user);
+                vo.set("commentCount", commentService.getUserCommentCount(uid));
+                vo.set("followerCount", followService.getFollowerCount(EntityType.ENTITY_USER, uid));
+                vo.set("followeeCount", followService.getFolloweeCount(uid, EntityType.ENTITY_USER));
+                if (localUserId != 0) {
+                    vo.set("followed", followService.isFollower(localUserId, EntityType.ENTITY_USER, uid));
+                } else {
+                    vo.set("followed", false);
             }
             userInfos.add(vo);
         }
